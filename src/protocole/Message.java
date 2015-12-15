@@ -1,37 +1,45 @@
 package protocole;
 
-public class Message {
+import java.util.Date;
+
+public class Message implements MessageProtocol {
 	private String expediteur;
 	private String destinataire;
+	private Date date;
 	private String message;
 	
 	public Message(String expediteur, String destinataire, String message) {
 		this.expediteur = expediteur;
 		this.destinataire = destinataire;
+		this.date = new Date();
 		this.message = message;
 	}
 
-	public String getExpediteur() {
+	public String GetExpediteur() {
 		return expediteur;
 	}
 
-	public void setExpediteur(String expediteur) {
+	public void SetExpediteur(String expediteur) {
 		this.expediteur = expediteur;
 	}
 
-	public String getDestinataire() {
+	public String GetDestinataire() {
 		return destinataire;
 	}
 
-	public void setDestinataire(String destinataire) {
+	public void SetDestinataire(String destinataire) {
 		this.destinataire = destinataire;
 	}
-
-	public String getMessage() {
+	
+	public Date GetDate() {
+		return date;
+	}
+	
+	public String GetMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void SetMessage(String message) {
 		this.message = message;
 	}
 }

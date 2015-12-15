@@ -59,7 +59,7 @@ public class ClientController implements ClientTchat {
 	
 	public void Send(Message message) {
 		try {
-			communication.Send(name + " > " + message);
+			communication.Send(message);
 		} catch (Exception e) {
 	    	System.err.println("Client exception: " + e.toString());
 	    	e.printStackTrace();
