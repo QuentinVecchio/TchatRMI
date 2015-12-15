@@ -15,7 +15,7 @@ public class Tchat implements CommunicationProtocol {
     }
 
     public boolean Register(ClientTchat c) throws RemoteException {
-    	if(nameExist(c.GetName()))
+    	if(NameExist(c.GetName()))
     	{
     		return false;
     	}
@@ -52,7 +52,7 @@ public class Tchat implements CommunicationProtocol {
     	}
     }
     
-    private boolean nameExist(String name)
+    private boolean NameExist(String name)
     {
     	for(int i=0;i<clients.size();i++)
     	{
