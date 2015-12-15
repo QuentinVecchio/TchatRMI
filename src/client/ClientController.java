@@ -35,6 +35,8 @@ public class ClientController implements ClientTchat {
 	    	} else {
 				view.Affiche();
 				connectionView.Exit();
+				connectionView=null;
+				System.gc();
 			}
 		} catch (Exception e) {
 			connectionView.ErrorHost();

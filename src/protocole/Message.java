@@ -1,6 +1,9 @@
 package protocole;
 
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
+
+import client.ClientTchat;
 
 public class Message implements MessageProtocol {
 	private String expediteur;
@@ -9,6 +12,12 @@ public class Message implements MessageProtocol {
 	private String message;
 	
 	public Message(String expediteur, String destinataire, String message) {
+		try {
+			MessageProtocol stub = (MessageProtocol) UnicastRemoteObject.exportObject(this, 0);
+		} catch (Exception e) {
+			System.err.println("Message exception: " + e.toString());
+			e.printStackTrace();
+		}
 		this.expediteur = expediteur;
 		this.destinataire = destinataire;
 		this.date = new Date();

@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -22,49 +23,62 @@ public class ClientConnectionView extends JFrame implements ActionListener {
 	private JLabel pseudoLabel = new JLabel("Pseudo : ");
 	private JLabel hostLabel = new JLabel("Host : ");
 	private JLabel portLabel = new JLabel("Port : ");
-	private JPanel content = new JPanel();
 	private ClientController c;
 	
 	public ClientConnectionView(ClientController c) {
 		this.c = c;
 		//Définition de la fenêtre
-		this.setSize(400, 200);
+		this.setSize(405, 150);
 		this.setTitle("Tchat - Connexion");
 		this.setLocationRelativeTo(null);
+		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLayout(new BorderLayout());
-		//Définition du bouton connexion
-		this.getContentPane().add( connectionButton, BorderLayout.SOUTH);
-		connectionButton.addActionListener(this);
+		this.setLayout(new GridBagLayout());
 		//Définition du formulaire
-		this.getContentPane().add( content, BorderLayout.CENTER);
-		content.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 	    gbc.gridy = 0;
 	    gbc.gridheight = 1;
 		//Définition label et textfield pseudo
 	    gbc.gridwidth = 1;
-	    content.add(pseudoLabel, gbc);
+	    this.add(pseudoLabel, gbc);
 	    gbc.gridx = 1;
-	    gbc.gridwidth = 3;
-	    content.add(pseudoTextField, gbc);
+	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    this.add(pseudoTextField, gbc);
+	    //pseudoTextField.setPreferredSize(new Dimension(350, 30));
 	    //Définition label et textfield host
 	    gbc.gridy = 1;
 	    gbc.gridx = 0;
 	    gbc.gridwidth = 1;
-	    content.add(hostLabel, gbc);
+	    this.add(hostLabel, gbc);
 	    gbc.gridx = 1;
-	    gbc.gridwidth = 3;
-	    content.add(hostTextField, gbc);
+	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    //hostTextField.setPreferredSize(new Dimension(350, 30));
+	    this.add(hostTextField, gbc);
 	    //Définition label et textfield port
 	    gbc.gridy = 2;
 	    gbc.gridx = 0;
 	    gbc.gridwidth = 1;
-	    content.add(portLabel, gbc);
+	    this.add(portLabel, gbc);
 	    gbc.gridx = 1;
-	    gbc.gridwidth = 3;
-	    content.add(portTextField, gbc);
+	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    this.add(portTextField, gbc);
+	    //portTextField.setPreferredSize(new Dimension(350, 30));
+		//Définition du bouton connexion
+		gbc.gridy = 4;
+	    gbc.gridx = 0;
+	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    this.add(connectionButton, gbc);
+		connectionButton.addActionListener(this);
+		connectionButton.setPreferredSize(new Dimension(400, 30));
 	}
   
 	public void Affiche() {
@@ -80,7 +94,7 @@ public class ClientConnectionView extends JFrame implements ActionListener {
 	}
 
 	public void Exit() {
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setVisible(false);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
