@@ -7,5 +7,5 @@ import client.ClientTchat;
 public interface CommunicationProtocol extends Remote {
     boolean Register(ClientTchat c) throws RemoteException;
     void Disconnection() throws RemoteException;
-    void Send(String message) throws RemoteException;
+    void Send(Message message) throws RemoteException;
 }

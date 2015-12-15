@@ -4,23 +4,20 @@ import java.rmi.RemoteException;
 import java.util.LinkedList;
 import client.ClientTchat;
 import protocole.CommunicationProtocol;
+import protocole.Message;
 
 public class Tchat implements CommunicationProtocol {
 	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
-	private LinkedList<String> messages = new LinkedList<String>();
+	private LinkedList<Message> messages = new LinkedList<Message>();
 	
-    public Tchat() 
-    {
+    public Tchat()  {
     	
     }
 
     public boolean Register(ClientTchat c) throws RemoteException {
-    	if(NameExist(c.GetName()))
-    	{
+    	if(NameExist(c.GetName())) {
     		return false;
-    	}
-    	else
-    	{
+    	} else {
 	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
 	    	for(int i=0;i<messages.size();i++)
@@ -31,39 +28,29 @@ public class Tchat implements CommunicationProtocol {
     	}
     }
     
-    public void Disconnection()
-    {
+    public void Disconnection() {
     	
     }
     
-    public void Send(String message)
-    {	System.out.println("Message : " + message);
+    public void Send(Message message) {	
     	messages.add(message);
-    	for(int i=0;i<clients.size();i++)
-    	{
-    		try 
-    		{
+    	for(int i=0;i<clients.size();i++) {
+    		try {
     			clients.get(i).Receive(message);
-    		}
-    		catch (Exception e) {
+    		} catch (Exception e) {
                 System.err.println("Tchat exception: " + e.toString());
                 e.printStackTrace();
             }
     	}
     }
     
-    private boolean NameExist(String name)
-    {
-    	for(int i=0;i<clients.size();i++)
-    	{
-    		try
-    		{
-	    		if(clients.get(i).GetName() == name)
-	    		{
+    private boolean NameExist(String name) {
+    	for(int i=0;i<clients.size();i++) {
+    		try {
+	    		if(clients.get(i).GetName() == name) {
 	    			return true;
 	    		}
-    		}
-    		catch (Exception e) {
+    		} catch (Exception e) {
                 System.err.println("Tchat exception: " + e.toString());
                 e.printStackTrace();
             }
