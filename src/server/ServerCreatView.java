@@ -67,11 +67,13 @@ public class ServerCreatView extends JFrame implements ActionListener {
 		if(e.getSource() == jButton1) {
 			try {
 	            servercont.InitServeur(Integer.parseInt(jTextField1.getText()));
+	            servercont.Run();
 	        }
 	        catch(NumberFormatException nfe)
 	        {
 	        	ErrorPort();
 	        }
+                        
 		}
 	}
 }

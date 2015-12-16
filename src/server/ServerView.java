@@ -23,7 +23,8 @@ import javax.swing.event.ListSelectionListener;
 
 public class ServerView extends JFrame  {
 
-
+    String Message[] = {"adrien","pierre","michel"};
+    String clients[]= {"adrien","pierre","michel"};
     private JPanel jPanel1 = new JPanel();
     private JTabbedPane jTabbedPane1 = new JTabbedPane();
     //private PaneLayout paneLayout1 = new PaneLayout();
@@ -47,8 +48,9 @@ public class ServerView extends JFrame  {
 
     private void jbInit() throws Exception {
         
-        String choix[] = {"adrien","pierre","michel"};
-        jList1= new JList(choix);
+        
+        jList1= new JList(Message);
+        jList2= new JList(clients);
         
         //jPanel1.setLayout(paneLayout1);
         jTabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -60,11 +62,11 @@ public class ServerView extends JFrame  {
         jTabbedPane1.addTab("adrien", jPanel2);
         jPanel3.add(jList2, BorderLayout.NORTH);
         jPanel3.add(jPanel4, BorderLayout.CENTER);
-        jTabbedPane1.addTab(null, jPanel3);
+        jTabbedPane1.addTab("bonjour", jPanel3);
         /*jPanel1.add(jTabbedPane1,
                     new PaneConstraints("jTabbedPane1", "jTabbedPane1",
                                         PaneConstraints.ROOT, 1.0f));*/
-        this.getContentPane().add(jPanel1, null);
+        this.getContentPane().add(jTabbedPane1, null);
         this.setSize(800, 500);
         this.setVisible(true);
     }

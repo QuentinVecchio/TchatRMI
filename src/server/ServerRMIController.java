@@ -11,6 +11,7 @@ public class ServerRMIController {
     private CommunicationProtocol stub;
     private Registry registry;
     private ServerCreatView scv;
+    private ServerView sv;
     
     public ServerRMIController() {
 
@@ -38,7 +39,7 @@ public class ServerRMIController {
         }       
     }
     public void Run (){
-        
+        sv = new ServerView();
     }
     
 }
