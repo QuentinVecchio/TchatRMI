@@ -1,8 +1,8 @@
 package server;
 
-public class MainServer {
+public class MainRMI {
     public static void main(String args[]){
-        ServerController sc = new ServerController();
+        ServerRMIController sc = new ServerRMIController();
         sc.run();
         //ServerView sv = new ServerView(); 
     }

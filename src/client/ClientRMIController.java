@@ -1,27 +1,27 @@
 package client;
 
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-
 import protocole.CommunicationProtocol;
 import protocole.Message;
+import protocole.MessageProtocol;
 
-public class ClientController implements ClientTchat {
+public class ClientRMIController implements ClientTchat {
 
 	private Client c;
-	private ClientConnectionView connectionView;
+	private ClientConnectionRMIView connectionView;
 	private ClientView view;
 	private CommunicationProtocol communication;
 	
-	public ClientController() {
+	public ClientRMIController() {
 		c = new Client();
-		connectionView = new ClientConnectionView(this);
+		connectionView = new ClientConnectionRMIView(this);
 		view = new ClientView(this);
 	}
 	
 	public void Run() {
+		//view.Affiche();
 		connectionView.Affiche();
 	}
 	
@@ -55,12 +55,18 @@ public class ClientController implements ClientTchat {
 		}
 	}
 	
-	public void Receive(Message message) {	
+	public void Receive(MessageProtocol message) {	
 		c.AddMessage(message);
+		view.AddMessage(message);
+	}
+	
+	public void AddClient(String client) {
+		view.AddClient(client);
 	}
 	
 	public void Send(Message message) {
 		try {
+			//MessageProtocol stub = (MessageProtocol) UnicastRemoteObject.exportObject(this, 0);
 			communication.Send(message);
 		} catch (Exception e) {
 	    	System.err.println("Client exception: " + e.toString());

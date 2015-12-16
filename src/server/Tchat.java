@@ -1,10 +1,12 @@
 package server;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import client.ClientTchat;
 import protocole.CommunicationProtocol;
 import protocole.Message;
+import protocole.MessageProtocol;
 
 public class Tchat implements CommunicationProtocol {
 	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
@@ -20,9 +22,13 @@ public class Tchat implements CommunicationProtocol {
     	} else {
 	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
-	    	for(int i=0;i<messages.size();i++)
-	    	{
+	    	for(int i=0;i<messages.size();i++) {
 	    		c.Receive(messages.get(i));
+	    	}
+	    	Message m = new Message(c.GetName(), "all", c.GetName() + " est connecté");
+	    	messages.add(m);
+	    	for(int i=0;i<clients.size();i++) {
+	    		clients.get(i).Receive(m);
 	    	}
 	    	return true;
     	}
@@ -32,8 +38,8 @@ public class Tchat implements CommunicationProtocol {
     	
     }
     
-    public void Send(Message message) {	
-    	messages.add(message);
+    public void Send(MessageProtocol message) {	
+    	messages.add((Message) message);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);

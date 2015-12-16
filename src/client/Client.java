@@ -3,6 +3,7 @@ package client;
 import java.util.LinkedList;
 
 import protocole.Message;
+import protocole.MessageProtocol;
 
 public class Client {
 	private String name;
@@ -46,8 +47,8 @@ public class Client {
 		this.port = port;
 	}
 	
-	public void AddMessage(Message message) {
-		messages.add(message);
+	public void AddMessage(MessageProtocol message) {
+		messages.add((Message) message);
 	}
 	
     public LinkedList<Message> GetMessages() {

@@ -3,7 +3,7 @@ package client;
 public class MainRMI {
 	public static void main(String[] args) 
 	{
-		ClientController controllerClient = new ClientController();
+		ClientRMIController controllerClient = new ClientRMIController();
 		controllerClient.Run();
     }
 }

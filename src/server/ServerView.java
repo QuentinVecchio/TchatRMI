@@ -18,15 +18,15 @@ import javax.swing.JToolBar;
 
 import javax.swing.event.ListSelectionListener;
 
-import oracle.jdeveloper.layout.PaneConstraints;
-import oracle.jdeveloper.layout.PaneLayout;
+//import oracle.jdeveloper.layout.PaneConstraints;
+//import oracle.jdeveloper.layout.PaneLayout;
 
 public class ServerView extends JFrame  {
 
 
     private JPanel jPanel1 = new JPanel();
     private JTabbedPane jTabbedPane1 = new JTabbedPane();
-    private PaneLayout paneLayout1 = new PaneLayout();
+    //private PaneLayout paneLayout1 = new PaneLayout();
     private JPanel jPanel2 = new JPanel();
     private JPanel jPanel3 = new JPanel();
     private JList jList1 = new JList();
@@ -50,7 +50,7 @@ public class ServerView extends JFrame  {
         String choix[] = {"adrien","pierre","michel"};
         jList1= new JList(choix);
         
-        jPanel1.setLayout(paneLayout1);
+        //jPanel1.setLayout(paneLayout1);
         jTabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         jPanel2.setLayout(borderLayout1);
         jPanel3.setLayout(borderLayout2);
@@ -61,9 +61,9 @@ public class ServerView extends JFrame  {
         jPanel3.add(jList2, BorderLayout.NORTH);
         jPanel3.add(jPanel4, BorderLayout.CENTER);
         jTabbedPane1.addTab(null, jPanel3);
-        jPanel1.add(jTabbedPane1,
+        /*jPanel1.add(jTabbedPane1,
                     new PaneConstraints("jTabbedPane1", "jTabbedPane1",
-                                        PaneConstraints.ROOT, 1.0f));
+                                        PaneConstraints.ROOT, 1.0f));*/
         this.getContentPane().add(jPanel1, null);
         this.setSize(800, 500);
         this.setVisible(true);

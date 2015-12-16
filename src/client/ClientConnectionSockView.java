@@ -1,6 +1,5 @@
 package client;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,10 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ClientConnectionView extends JFrame implements ActionListener {
+public class ClientConnectionSockView extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JButton connectionButton = new JButton("Connection");
@@ -23,9 +21,10 @@ public class ClientConnectionView extends JFrame implements ActionListener {
 	private JLabel pseudoLabel = new JLabel("Pseudo : ");
 	private JLabel hostLabel = new JLabel("Host : ");
 	private JLabel portLabel = new JLabel("Port : ");
-	private ClientController c;
+	private ClientRMIController c;
 	
-	public ClientConnectionView(ClientController c) {
+	public ClientConnectionSockView(ClientRMIController c) {
+		super();
 		this.c = c;
 		//Définition de la fenêtre
 		this.setSize(405, 150);

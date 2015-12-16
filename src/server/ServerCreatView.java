@@ -1,35 +1,27 @@
 package server;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-
-import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.VerticalFlowLayout;
+//import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-public class ServerCreatView extends JFrame {
-    private ServerController servercont;
-        
-    private JPanel jPanel1 = new JPanel();
-    private VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
-    private JPanel jPanel2 = new JPanel();
+public class ServerCreatView extends JFrame implements ActionListener {
+    private ServerRMIController servercont;
     private JLabel jLabel1 = new JLabel();
     private JTextField jTextField1 = new JTextField();
     private JButton jButton1 = new JButton();
-    private BorderLayout borderLayout1 = new BorderLayout();
-    private JLabel jLabel2 = new JLabel();
 
-    public ServerCreatView(ServerController aServercont ) {
+    public ServerCreatView(ServerRMIController aServercont ) {
         servercont=aServercont;
         try {
             jbInit();
@@ -39,36 +31,47 @@ public class ServerCreatView extends JFrame {
     }
 
     private void jbInit() throws Exception {
-        jPanel1.setLayout(verticalFlowLayout1);
-        jPanel2.setLayout(borderLayout1);
-        jLabel1.setText("insserez le numero de port: ");
-        jTextField1.setSize(new Dimension(70,19));
-        //jTextField1.setMinimumSize(new Dimension(30, 19));
-        jButton1.setText("Ok");
-        jButton1.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    jButton1_actionPerformed(e);
-                }
-            });
-        jLabel2.setForeground(Color.red);
-        jLabel2.setFont(new Font("Tahoma", 1, 12));
-        jPanel2.add(jLabel1, BorderLayout.WEST);
-        jPanel2.add(jTextField1, BorderLayout.CENTER);
-        jPanel2.add(jButton1, BorderLayout.EAST);
-        jPanel1.add(jPanel2, null);
-        jPanel1.add(jLabel2, null);
-        this.getContentPane().add(jPanel1, null);
-        this.setSize(400, 100);
+    	this.setSize(400, 100);
         this.setVisible(true);
+        this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+        this.setLayout(new GridBagLayout());
+    	GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		this.add(jLabel1, gbc);
+		gbc.gridx = 1;
+		this.add(jTextField1, gbc);
+		gbc.gridx = 2;
+		this.add(jButton1, gbc);
+        jLabel1.setText("Insérez le numéro du port : ");
+        jLabel1.setPreferredSize(new Dimension(180, 30));
+        jTextField1.setPreferredSize(new Dimension(180, 30));
+        jButton1.setPreferredSize(new Dimension(30, 30));
+        jButton1.setText("Ok");
+        jButton1.addActionListener(this);
     }
 
-    private void jButton1_actionPerformed(ActionEvent e) {
-        try {
-            servercont.InitServeur(Integer.parseInt(jTextField1.getText()));
-        }
-        catch(NumberFormatException nfe)
-        {
-            jLabel2.setText("inserte a number");
-        }
-    }
+    public void ErrorPort() {
+		JOptionPane.showMessageDialog(null, "Error Port", "Error : Port is a number.", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void Exit() {
+		this.setVisible(false);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == jButton1) {
+			try {
+	            servercont.InitServeur(Integer.parseInt(jTextField1.getText()));
+	        }
+	        catch(NumberFormatException nfe)
+	        {
+	        	ErrorPort();
+	        }
+		}
+	}
 }
