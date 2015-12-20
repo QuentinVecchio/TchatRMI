@@ -1,15 +1,13 @@
 package client;
 
 import java.util.LinkedList;
-
-import protocole.Message;
 import protocole.MessageProtocol;
 
 public class Client {
 	private String name;
 	private String host;
 	private String port;
-	private LinkedList<Message> messages = new LinkedList<Message>();
+	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
 
 	public Client() {
 		this.name = "";
@@ -48,10 +46,10 @@ public class Client {
 	}
 	
 	public void AddMessage(MessageProtocol message) {
-		messages.add((Message) message);
+		messages.add(message);
 	}
 	
-    public LinkedList<Message> GetMessages() {
+    public LinkedList<MessageProtocol> GetMessages() {
     	return messages;
     }
 }

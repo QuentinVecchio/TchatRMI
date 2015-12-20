@@ -86,9 +86,9 @@ public class ClientConnectionRMIView extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == connectionButton) {
-			c.GetClient().SetHost(hostTextField.getText());
-			c.GetClient().SetName(pseudoTextField.getText());
-			c.GetClient().SetPort("1099");
+			c.SetHost(hostTextField.getText());
+			c.SetName(pseudoTextField.getText());
+			c.SetPort("1099");
 			c.Connection();		
 		}
 	}

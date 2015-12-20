@@ -10,7 +10,7 @@ import protocole.MessageProtocol;
 
 public class Tchat implements CommunicationProtocol {
 	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
-	private LinkedList<Message> messages = new LinkedList<Message>();
+	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
 	
     public Tchat()  {
     	
@@ -39,7 +39,7 @@ public class Tchat implements CommunicationProtocol {
     }
     
     public void Send(MessageProtocol message) {	
-    	messages.add((Message) message);
+    	messages.add(message);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);

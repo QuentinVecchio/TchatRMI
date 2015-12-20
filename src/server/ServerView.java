@@ -1,22 +1,11 @@
 package server;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import java.awt.Insets;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
-
-import javax.swing.event.ListSelectionListener;
 
 //import oracle.jdeveloper.layout.PaneConstraints;
 //import oracle.jdeveloper.layout.PaneLayout;
@@ -25,18 +14,17 @@ public class ServerView extends JFrame  {
 
     String Message[] = {"adrien","pierre","michel"};
     String clients[]= {"adrien","pierre","michel"};
-    private JPanel jPanel1 = new JPanel();
     private JTabbedPane jTabbedPane1 = new JTabbedPane();
     //private PaneLayout paneLayout1 = new PaneLayout();
     private JPanel jPanel2 = new JPanel();
     private JPanel jPanel3 = new JPanel();
-    private JList jList1 = new JList();
     private BorderLayout borderLayout1 = new BorderLayout();
     private JLabel jLabel1 = new JLabel();
     private BorderLayout borderLayout2 = new BorderLayout();
-    private JList jList2 = new JList();
     private JPanel jPanel4 = new JPanel();
-
+    private JList jList1;
+    private JList jList2;
+    
     public ServerView() {
         super();
         try {

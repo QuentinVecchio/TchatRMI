@@ -1,11 +1,11 @@
 package protocole;
 
 import java.rmi.Remote;
-import java.util.Date;
+import java.rmi.RemoteException;
 
 public interface MessageProtocol extends Remote {
-	public String GetExpediteur();
-	public String GetDestinataire();
-	public Date GetDate();
-	public String GetMessage();
+	public String GetExpediteur() throws RemoteException;
+	public String GetDestinataire() throws RemoteException;
+	public String GetDate() throws RemoteException;
+	public String GetMessage() throws RemoteException;
 }

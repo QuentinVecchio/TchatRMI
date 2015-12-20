@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,10 +36,11 @@ public class ClientView extends JFrame implements ActionListener {
 	private JList<String> clientsList = new JList<String>();
 	private JTextArea messagesArea = new JTextArea();
 	private JButton sendButton = new JButton("S");
-	private JTextField messageTextField = new JTextField("Your mess");
+	private JTextField messageTextField = new JTextField("");
 	private ClientRMIController c;
 
 	public ClientView(ClientRMIController c) {
+		this.c = c;
 		this.setSize(800, 600);
 		this.setTitle("Tchat - Connected");
 		this.setLocationRelativeTo(null);
@@ -62,8 +65,9 @@ public class ClientView extends JFrame implements ActionListener {
 		if(e.getSource() == deconnectionButton) {
 			c.Disconnection();		
 		} else if (e.getSource() == sendButton) {
-			Message m = new Message(c.GetName(), null, messageTextField.getText());
+			Message m = new Message(c.GetName(), "all", messageTextField.getText());
 			c.Send(m);
+			messageTextField.setText("");
 		}
 	}
 	
@@ -75,11 +79,11 @@ public class ClientView extends JFrame implements ActionListener {
 	
 	public void AddMessage(MessageProtocol m) {
 		String allMessage = messagesArea.getText();
-		String exp = "all";
-		if(m.GetExpediteur() == null)
-			allMessage += "\n" + exp + " > " + m.GetDestinataire() + " : " + m.GetMessage();
-		else
+		try {
 			allMessage += "\n" + m.GetExpediteur() + " > " + m.GetDestinataire() + " : " + m.GetMessage();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		messagesArea.setText(allMessage);
 	}
 	
@@ -122,9 +126,10 @@ public class ClientView extends JFrame implements ActionListener {
 		pseudoLabel2.setPreferredSize(new Dimension(120,30));
 		hostLabel2.setPreferredSize(new Dimension(120,30));
 		portLabel2.setPreferredSize(new Dimension(120,30));
-		/*pseudoLabel2.setText(c.GetClient().GetName());
-		hostLabel2.setText(c.GetClient().GetHost());
-		portLabel2.setText(c.GetClient().GetPort());*/
+		pseudoLabel2.setText(c.GetName());
+		hostLabel2.setText(c.GetHost());
+		portLabel2.setText(c.GetPort());
+		deconnectionButton.addActionListener(this);
 		deconnectionButton.setPreferredSize(new Dimension(30,30));
 		this.add(panelNorth, BorderLayout.NORTH);
 	}
@@ -139,6 +144,7 @@ public class ClientView extends JFrame implements ActionListener {
 		gbc.gridwidth = 1;
 		messageTextField.setPreferredSize(new Dimension(760,30));
 		sendButton.setPreferredSize(new Dimension(30,30));
+		sendButton.addActionListener(this);
 		panelSouth.add(messageTextField,gbc);
 		gbc.gridx = 3;
 		panelSouth.add(sendButton,gbc);

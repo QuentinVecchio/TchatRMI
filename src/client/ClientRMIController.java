@@ -17,16 +17,15 @@ public class ClientRMIController implements ClientTchat {
 	public ClientRMIController() {
 		c = new Client();
 		connectionView = new ClientConnectionRMIView(this);
-		view = new ClientView(this);
 	}
 	
 	public void Run() {
-		//view.Affiche();
 		connectionView.Affiche();
 	}
 	
 	public void Connection() {
 		try {
+			view = new ClientView(this);
 			ClientTchat stub = (ClientTchat) UnicastRemoteObject.exportObject(this, 0);
 			Registry registry = LocateRegistry.getRegistry(c.GetHost(),Integer.parseInt(c.GetPort()));
 	    	this.communication = (CommunicationProtocol) registry.lookup("Tchat");
@@ -66,7 +65,6 @@ public class ClientRMIController implements ClientTchat {
 	
 	public void Send(Message message) {
 		try {
-			//MessageProtocol stub = (MessageProtocol) UnicastRemoteObject.exportObject(this, 0);
 			communication.Send(message);
 		} catch (Exception e) {
 	    	System.err.println("Client exception: " + e.toString());
@@ -74,11 +72,27 @@ public class ClientRMIController implements ClientTchat {
 		}
 	}
 	
-    public Client GetClient()  {
-    	return this.c;
-    }
-
 	public String GetName() {
 		return c.GetName();
+	}
+	
+    public String GetHost()  {
+    	return c.GetHost();
+    }
+
+    public String GetPort()  {
+    	return c.GetPort();
+    }
+    
+	public void SetName(String name) {
+		c.SetName(name);
+	}
+	
+	public void SetHost(String host) {
+		c.SetHost(host);
+	}
+	
+	public void SetPort(String port) {
+		c.SetPort(port);
 	}
 }

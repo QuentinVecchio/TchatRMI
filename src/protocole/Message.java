@@ -1,6 +1,8 @@
 package protocole;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
 public class Message implements MessageProtocol, Serializable {
@@ -8,14 +10,20 @@ public class Message implements MessageProtocol, Serializable {
 	private static final long serialVersionUID = 1L;
 	private String expediteur;
 	private String destinataire;
-	private Date date;
+	private String date;
 	private String message;
 	
 	public Message(String expediteur, String destinataire, String message) {
-		this.expediteur = expediteur;
-		this.destinataire = destinataire;
-		this.date = new Date();
-		this.message = message;
+		try {
+			this.expediteur = expediteur;
+			this.destinataire = destinataire;
+			this.date = new Date().toString();
+			this.message = message;
+			MessageProtocol stub = (MessageProtocol) UnicastRemoteObject.exportObject(this, 0);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public String GetExpediteur() {
@@ -34,7 +42,7 @@ public class Message implements MessageProtocol, Serializable {
 		this.destinataire = destinataire;
 	}
 	
-	public Date GetDate() {
+	public String GetDate() {
 		return date;
 	}
 	

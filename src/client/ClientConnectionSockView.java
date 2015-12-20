@@ -98,9 +98,9 @@ public class ClientConnectionSockView extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == connectionButton) {
-			c.GetClient().SetHost(hostTextField.getText());
-			c.GetClient().SetName(pseudoTextField.getText());
-			c.GetClient().SetPort(portTextField.getText());
+			c.SetHost(hostTextField.getText());
+			c.SetName(pseudoTextField.getText());
+			c.SetPort(portTextField.getText());
 			c.Connection();		
 		}
 	}
