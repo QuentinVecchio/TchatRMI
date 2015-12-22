@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import protocole.MessageProtocol;
 
@@ -7,18 +8,21 @@ public class Client {
 	private String name;
 	private String host;
 	private String port;
+	private Color color;
 	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
-
+	
 	public Client() {
 		this.name = "";
 		this.host = "";
 		this.port = "";
+		this.color = new Color(0, 0, 0);
 	}
 	
 	public Client(String name, String host, String port) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
+		this.color = new Color(0, 0, 0);
 	}
 
 	public String GetName() {
@@ -33,6 +37,10 @@ public class Client {
 		return port;
 	}
 	
+	public Color GetColor() {
+		return color;
+	}
+	
 	public void SetName(String name) {
 		this.name = name;
 	}
@@ -43,6 +51,10 @@ public class Client {
 	
 	public void SetPort(String port) {
 		this.port = port;
+	}
+	
+	public void SetColor(Color c) {
+		this.color = c;
 	}
 	
 	public void AddMessage(MessageProtocol message) {

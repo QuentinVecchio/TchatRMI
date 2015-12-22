@@ -1,5 +1,6 @@
 package protocole;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,14 +13,16 @@ public class Message implements MessageProtocol, Serializable {
 	private String destinataire;
 	private String date;
 	private String message;
+	private Color color;
 	
-	public Message(String expediteur, String destinataire, String message) {
+	public Message(String expediteur, String destinataire, String message, Color c) {
 		try {
 			this.expediteur = expediteur;
 			this.destinataire = destinataire;
 			this.date = new Date().toString();
 			this.message = message;
-			MessageProtocol stub = (MessageProtocol) UnicastRemoteObject.exportObject(this, 0);
+			this.color = c;
+			UnicastRemoteObject.exportObject(this, 0);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -52,5 +55,13 @@ public class Message implements MessageProtocol, Serializable {
 
 	public void SetMessage(String message) {
 		this.message = message;
+	}
+	
+	public Color GetColor() {
+		return this.color;
+	}
+	
+	public void SetColor(Color c) {
+		this.color = c;
 	}
 }

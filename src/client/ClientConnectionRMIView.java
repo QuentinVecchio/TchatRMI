@@ -1,11 +1,14 @@
 package client;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,13 +22,15 @@ public class ClientConnectionRMIView extends JFrame implements ActionListener {
 	private JTextField hostTextField = new JTextField("Host");
 	private JLabel pseudoLabel = new JLabel("Pseudo : ");
 	private JLabel hostLabel = new JLabel("Host : ");
+	private JLabel colorLabel = new JLabel("Votre couleur d'écriture");
+	private JButton colorButton = new JButton("Choisir couleur");
 	private ClientRMIController c;
 	
 	public ClientConnectionRMIView(ClientRMIController c) {
 		super();
 		this.c = c;
 		//Définition de la fenêtre
-		this.setSize(405, 120);
+		this.setSize(405, 150);
 		this.setTitle("Tchat - Connexion");
 		this.setLocationRelativeTo(null);
 		this.setResizable(false);
@@ -38,13 +43,14 @@ public class ClientConnectionRMIView extends JFrame implements ActionListener {
 	    gbc.gridheight = 1;
 		//Définition label et textfield pseudo
 	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
 	    this.add(pseudoLabel, gbc);
 	    gbc.gridx = 1;
 	    gbc.gridwidth = 1;
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 	    gbc.gridwidth = GridBagConstraints.REMAINDER;
 	    this.add(pseudoTextField, gbc);
-	    //pseudoTextField.setPreferredSize(new Dimension(350, 30));
 	    //Définition label et textfield host
 	    gbc.gridy = 1;
 	    gbc.gridx = 0;
@@ -54,10 +60,21 @@ public class ClientConnectionRMIView extends JFrame implements ActionListener {
 	    gbc.gridwidth = 1;
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 	    gbc.gridwidth = GridBagConstraints.REMAINDER;
-	    //hostTextField.setPreferredSize(new Dimension(350, 30));
 	    this.add(hostTextField, gbc);
-	    //portTextField.setPreferredSize(new Dimension(350, 30));
-		//Définition du bouton connexion
+		//Définition du choix de couleur
+	    gbc.gridy = 2;
+	    gbc.gridx = 0;
+	    gbc.gridwidth = 1;
+	    this.add(colorButton, gbc);
+	    gbc.gridx = 1;
+	    gbc.gridwidth = 1;
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    this.add(colorLabel, gbc);
+	    colorButton.addActionListener(this);
+	    colorButton.setPreferredSize(new Dimension(150, 30));
+	    colorLabel.setPreferredSize(new Dimension(250, 30));
+	    //Définition du bouton connexion
 		gbc.gridy = 4;
 	    gbc.gridx = 0;
 	    gbc.gridwidth = 1;
@@ -90,6 +107,15 @@ public class ClientConnectionRMIView extends JFrame implements ActionListener {
 			c.SetName(pseudoTextField.getText());
 			c.SetPort("1099");
 			c.Connection();		
+		} else if(e.getSource() == colorButton){
+			try {
+				Color color = JColorChooser.showDialog(null, "Choisir une couleur", c.GetColor());
+				c.SetColor(color);
+				colorLabel.setForeground(color);
+			} catch (HeadlessException e1) {
+				System.out.println("Erreur color");
+				e1.printStackTrace();
+			}
 		}
 	}
 }

@@ -49,9 +49,9 @@ public class ServerCreatView extends JFrame implements ActionListener {
 		this.add(jButton1, gbc);
         jLabel1.setText("Insérez le numéro du port : ");
         jLabel1.setPreferredSize(new Dimension(180, 30));
-        jTextField1.setPreferredSize(new Dimension(180, 30));
-        jButton1.setPreferredSize(new Dimension(30, 30));
-        jButton1.setText("Ok");
+        jTextField1.setPreferredSize(new Dimension(120, 30));
+        jButton1.setPreferredSize(new Dimension(90, 30));
+        jButton1.setText("Lancer");
         jButton1.addActionListener(this);
     }
 

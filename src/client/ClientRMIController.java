@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,6 +18,12 @@ public class ClientRMIController implements ClientTchat {
 	public ClientRMIController() {
 		c = new Client();
 		connectionView = new ClientConnectionRMIView(this);
+		try {
+			UnicastRemoteObject.exportObject(this, 0);
+		} catch (Exception e) {
+			System.err.println("Client exception: " + e.toString());
+			e.printStackTrace();
+		}
 	}
 	
 	public void Run() {
@@ -26,7 +33,6 @@ public class ClientRMIController implements ClientTchat {
 	public void Connection() {
 		try {
 			view = new ClientView(this);
-			ClientTchat stub = (ClientTchat) UnicastRemoteObject.exportObject(this, 0);
 			Registry registry = LocateRegistry.getRegistry(c.GetHost(),Integer.parseInt(c.GetPort()));
 	    	this.communication = (CommunicationProtocol) registry.lookup("Tchat");
 	    	if(this.communication.Register(this) == false) {
@@ -47,7 +53,7 @@ public class ClientRMIController implements ClientTchat {
 	public void Disconnection() {
 		view.Exit();
 		try {
-			this.communication.Disconnection();
+			this.communication.Disconnection(this);
 		} catch (Exception e) {
 	    	System.err.println("Client exception: " + e.toString());
 	    	e.printStackTrace();
@@ -84,6 +90,10 @@ public class ClientRMIController implements ClientTchat {
     	return c.GetPort();
     }
     
+    public Color GetColor()  {
+    	return c.GetColor();
+    }
+    
 	public void SetName(String name) {
 		c.SetName(name);
 	}
@@ -94,5 +104,9 @@ public class ClientRMIController implements ClientTchat {
 	
 	public void SetPort(String port) {
 		c.SetPort(port);
+	}
+	
+	public void SetColor(Color color) {
+		c.SetColor(color);
 	}
 }

@@ -1,7 +1,6 @@
 package server;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import client.ClientTchat;
 import protocole.CommunicationProtocol;
@@ -25,17 +24,33 @@ public class Tchat implements CommunicationProtocol {
 	    	for(int i=0;i<messages.size();i++) {
 	    		c.Receive(messages.get(i));
 	    	}
-	    	Message m = new Message(c.GetName(), "all", c.GetName() + " est connecté");
+	    	Message m = new Message(c.GetName(), "all", c.GetName() + " est connecté", c.GetColor());
 	    	messages.add(m);
 	    	for(int i=0;i<clients.size();i++) {
 	    		clients.get(i).Receive(m);
+	    		if(clients.get(i).GetName().equals(c.GetName()) == false) {
+	    			clients.get(i).AddClient(c.GetName());
+	    		}
+	    	}
+	    	for(int i=0;i<clients.size();i++) {
+	    		c.AddClient(clients.get(i).GetName());
 	    	}
 	    	return true;
     	}
     }
     
-    public void Disconnection() {
-    	
+    public void Disconnection(ClientTchat c) throws RemoteException{
+    	Message m = new Message(c.GetName(), "all", c.GetName() + " est déconnecté", c.GetColor());
+    	messages.add(m);
+    	for(int i=0;i<clients.size();i++) {
+    		try {
+    			clients.get(i).Receive(m);
+    		} catch (Exception e) {
+                System.err.println("Tchat exception: " + e.toString());
+                e.printStackTrace();
+            }
+    	}
+    	clients.remove(c.GetName());
     }
     
     public void Send(MessageProtocol message) {	
@@ -53,7 +68,7 @@ public class Tchat implements CommunicationProtocol {
     private boolean NameExist(String name) {
     	for(int i=0;i<clients.size();i++) {
     		try {
-	    		if(clients.get(i).GetName() == name) {
+	    		if(clients.get(i).GetName().equals(name)) {
 	    			return true;
 	    		}
     		} catch (Exception e) {
