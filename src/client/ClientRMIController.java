@@ -26,7 +26,7 @@ public class ClientRMIController implements ClientTchat {
 		}
 	}
 	
-	public void Run() {
+	public void Start() {
 		connectionView.Affiche();
 	}
 	
