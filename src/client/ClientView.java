@@ -80,6 +80,10 @@ public class ClientView extends JFrame implements ActionListener {
 		listClients.addElement(name);
 	}
 	
+	public void DeleteClient(String name) {
+		listClients.removeElement(name);
+	}
+	
 	public void AddMessage(MessageProtocol m) {
 		try {
 			allMessage += "<span style=\"color : rgb(" + m.GetColor().getRed() + "," + m.GetColor().getGreen() + "," + m.GetColor().getBlue() + ")\">" + m.GetExpediteur() + " > " + m.GetDestinataire() + " : " + m.GetMessage() + "</<span></br>";

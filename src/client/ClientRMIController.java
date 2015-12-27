@@ -69,6 +69,10 @@ public class ClientRMIController implements ClientTchat {
 		view.AddClient(client);
 	}
 	
+	public void DeleteClient(String client) {
+		view.DeleteClient(client);
+	}
+	
 	public void Send(Message message) {
 		try {
 			communication.Send(message);

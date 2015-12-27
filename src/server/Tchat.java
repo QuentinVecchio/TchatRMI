@@ -45,6 +45,7 @@ public class Tchat implements CommunicationProtocol {
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(m);
+    			clients.get(i).DeleteClient(c.GetName());
     		} catch (Exception e) {
                 System.err.println("Tchat exception: " + e.toString());
                 e.printStackTrace();
