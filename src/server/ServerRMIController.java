@@ -1,5 +1,7 @@
 package server;
 
+import client.ClientTchat;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -17,14 +19,19 @@ public class ServerRMIController {
 
     }
     
-    public void run(){
-    	scv = new ServerCreatView(this);
+    public void Start(){
+        scv = new ServerCreatView(this);
+        InitServeur(1099);
+        run();
+    }
+    public void run (){
+        sv = new ServerView(this);
     }
     
     public void InitServeur(int port){
         try {
             s = new Server(port);
-            obj = new Tchat();
+            obj = new Tchat(this);
             stub = (CommunicationProtocol) UnicastRemoteObject.exportObject(obj, 0);
             // Bind the remote object's stub in the registry
             java.rmi.registry.LocateRegistry.createRegistry(s.getPort());
@@ -38,8 +45,18 @@ public class ServerRMIController {
             e.printStackTrace();
         }       
     }
-    public void Run (){
-        sv = new ServerView();
+
+    public Tchat getTchar(){
+        return obj;
+    }
+    public ServerView getServerView(){
+        return sv;
     }
     
+    
+    //-------------------NOT RMI---------------------//
+    public void StartNotRIM(){
+        scv = new ServerCreatView(this);
+        scv.setVisible(true);
+    }
 }

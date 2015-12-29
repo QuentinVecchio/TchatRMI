@@ -113,4 +113,7 @@ public class ClientRMIController implements ClientTchat {
 	public void SetColor(Color color) {
 		c.SetColor(color);
 	}
+    public String toString(){
+        return c.GetName();
+    }
 }

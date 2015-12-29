@@ -1,26 +1,32 @@
 package server;
 
+import client.Client;
+
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import client.ClientTchat;
+
+import java.util.Vector;
+
 import protocole.CommunicationProtocol;
 import protocole.Message;
 import protocole.MessageProtocol;
 
 public class Tchat implements CommunicationProtocol {
-	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
-	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
+        private ServerRMIController sc;
+        private Vector<ClientTchat> clients = new Vector<ClientTchat>();
+        private Vector<MessageProtocol> messages = new Vector<MessageProtocol>();
 	
-    public Tchat()  {
-    	
+    public Tchat(ServerRMIController aSc)  {
+        sc = aSc;
     }
 
     public boolean Register(ClientTchat c) throws RemoteException {
     	if(NameExist(c.GetName())) {
     		return false;
     	} else {
-	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
+                sc.getServerView().addClient( c.GetName());
 	    	for(int i=0;i<messages.size();i++) {
 	    		c.Receive(messages.get(i));
 	    	}
@@ -56,6 +62,14 @@ public class Tchat implements CommunicationProtocol {
     
     public void Send(MessageProtocol message) {	
     	messages.add(message);
+
+        try {
+            sc.getServerView().addMessage(message.GetMessage());
+            System.out.println(message.GetMessage());
+        } catch (Exception e) {
+            System.err.println("Tchat exception: " + e.toString());
+            e.printStackTrace();
+        }
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);
@@ -78,5 +92,11 @@ public class Tchat implements CommunicationProtocol {
             }
     	}
     	return false;
+    }
+    public Vector<ClientTchat> getClients() {
+        return clients;
+    }
+    public Vector<MessageProtocol> getMessage(){
+        return messages;
     }
 }
