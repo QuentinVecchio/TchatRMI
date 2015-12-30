@@ -54,6 +54,7 @@ public class ClientRMIController implements ClientTchat {
 		view.Exit();
 		try {
 			this.communication.Disconnection(this);
+			System.exit(0);
 		} catch (Exception e) {
 	    	System.err.println("Client exception: " + e.toString());
 	    	e.printStackTrace();

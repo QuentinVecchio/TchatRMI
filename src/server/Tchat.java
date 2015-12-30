@@ -42,6 +42,7 @@ public class Tchat implements CommunicationProtocol {
     public void Disconnection(ClientTchat c) throws RemoteException{
     	Message m = new Message(c.GetName(), "all", c.GetName() + " est déconnecté", c.GetColor());
     	messages.add(m);
+    	clients.remove(c);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(m);
@@ -51,11 +52,11 @@ public class Tchat implements CommunicationProtocol {
                 e.printStackTrace();
             }
     	}
-    	clients.remove(c.GetName());
     }
     
     public void Send(MessageProtocol message) {	
-    	messages.add(message);
+    	Message m = new Message(message);
+    	messages.add(m);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);

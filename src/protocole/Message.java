@@ -29,6 +29,19 @@ public class Message implements MessageProtocol, Serializable {
 		
 	}
 
+	public Message(MessageProtocol message) {
+		try {
+			this.message = message.GetMessage();
+			this.expediteur = message.GetExpediteur();
+			this.destinataire = message.GetDestinataire();
+			this.date = message.GetDate();
+			this.color = message.GetColor();
+			UnicastRemoteObject.exportObject(this, 0);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public String GetExpediteur() {
 		return expediteur;
 	}
