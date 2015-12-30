@@ -3,7 +3,7 @@ package server;
 public class MainRMI {
     public static void main(String args[]){
         ServerRMIController sc = new ServerRMIController();
-        sc.run();
+        sc.Start();
         //ServerView sv = new ServerView(); 
     }
 }

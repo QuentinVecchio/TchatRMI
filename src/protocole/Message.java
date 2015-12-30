@@ -77,4 +77,7 @@ public class Message implements MessageProtocol, Serializable {
 	public void SetColor(Color c) {
 		this.color = c;
 	}
+        public String toString(){
+            return "<span style=\"color : rgb(" + GetColor().getRed() + "," + GetColor().getGreen() + "," + GetColor().getBlue() + ")\">" + GetExpediteur() + " > " + GetDestinataire() + " : " + GetMessage() + "</<span></br>";
+        }
 }

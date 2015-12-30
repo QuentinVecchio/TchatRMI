@@ -32,7 +32,7 @@ public class ServerCreatView extends JFrame implements ActionListener {
 
     private void jbInit() throws Exception {
     	this.setSize(400, 100);
-        this.setVisible(true);
+        this.setVisible(false);
         this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setResizable(false);
@@ -67,7 +67,7 @@ public class ServerCreatView extends JFrame implements ActionListener {
 		if(e.getSource() == jButton1) {
 			try {
 	            servercont.InitServeur(Integer.parseInt(jTextField1.getText()));
-	            servercont.Run();
+	            servercont.run();
 	        }
 	        catch(NumberFormatException nfe)
 	        {
