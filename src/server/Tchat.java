@@ -99,4 +99,7 @@ public class Tchat implements CommunicationProtocol {
     public Vector<MessageProtocol> getMessage(){
         return messages;
     }
+    public void setMessage(Vector<MessageProtocol> messageList){
+        messages = messageList;
+    }
 }

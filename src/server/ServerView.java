@@ -4,8 +4,16 @@ import java.awt.BorderLayout;
 
 import java.awt.Color;
 
+import java.awt.FlowLayout;
+
+import java.awt.event.ActionEvent;
+
+import java.awt.event.ActionListener;
+
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -18,24 +26,35 @@ import protocole.Message;
 //import oracle.jdeveloper.layout.PaneConstraints;
 //import oracle.jdeveloper.layout.PaneLayout;
 
-public class ServerView extends JFrame  {
+public class ServerView extends JFrame implements ActionListener  {
     
     ServerRMIController sc;
 
-    //String Message[] = {"adrien","pierre","michel"};
     Vector<String> Clients = new Vector<String>();
     Vector<String> Message = new Vector<String>();
-    private JTabbedPane GeneralePane = new JTabbedPane();
-    //private PaneLayout paneLayout1 = new PaneLayout();
-    private JPanel MessagePane = new JPanel();
-    private JPanel ClientPane = new JPanel();
-    private BorderLayout borderLayout1 = new BorderLayout();
-    private JLabel MessageTritre = new JLabel();
-    private BorderLayout borderLayout2 = new BorderLayout();
-    private JLabel ClientTitre = new JLabel();
-    private JScrollPane scrollMssageList = new JScrollPane();
     private JList MessageListe;
     private JList ClientListe;
+    
+    private JTabbedPane GeneralePane = new JTabbedPane();
+    
+    //-------------------onglait Messages----------------//
+    private JLabel MessageTritre = new JLabel();
+    private JPanel MessagePane = new JPanel();
+    private BorderLayout borderLayout1 = new BorderLayout();
+    private JScrollPane scrollMssageList = new JScrollPane();
+    
+    private JPanel Historique = new JPanel();
+    private FlowLayout flowLayoutHisto = new FlowLayout();
+    private JButton SaveHistorique = new JButton();
+    private JButton SupHistorique = new JButton();
+    private JButton LoadHistorique = new JButton();
+    
+    //-------------------onglait Clients----------------//
+    private JPanel ClientPane = new JPanel();
+    private JLabel ClientTitre = new JLabel();
+    private BorderLayout borderLayout2 = new BorderLayout();
+
+
     
     public ServerView(ServerRMIController asc ) {
         sc = asc;
@@ -51,16 +70,27 @@ public class ServerView extends JFrame  {
 
         MessageListe= new JList(Message);
         scrollMssageList.setViewportView(MessageListe);
-        //Message.add("Pierre");
         ClientListe= new JList(Clients);
         
-        //jPanel1.setLayout(paneLayout1);
         GeneralePane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         MessagePane.setLayout(borderLayout1);
         ClientPane.setLayout(borderLayout2);
+        Historique.setLayout(flowLayoutHisto);
+        SaveHistorique.setText("Save Historique");
+        SupHistorique.setText("Sup Historique");
+        LoadHistorique.setText("Charger Historique");
+        SaveHistorique.addActionListener(this);
+        SupHistorique.addActionListener(this);
+        LoadHistorique.addActionListener(this);
+        
+        Historique.setBorder(BorderFactory.createTitledBorder("Gsetion de l'historique"));
+        Historique.add(LoadHistorique);
+        Historique.add(SaveHistorique);
+        Historique.add(SupHistorique);        
         MessageTritre.setText("messege en temps directe :");
         MessagePane.add(scrollMssageList, BorderLayout.CENTER);
         MessagePane.add(MessageTritre, BorderLayout.NORTH);
+        MessagePane.add(Historique, BorderLayout.SOUTH);
         
         GeneralePane.addTab("Messages", MessagePane);
         ClientTitre.setText("clientes acctuelement connecte");
@@ -71,6 +101,18 @@ public class ServerView extends JFrame  {
         this.getContentPane().add(GeneralePane, null);
         this.setSize(800, 500);
         this.setVisible(true);
+    }
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == SaveHistorique ) {
+            sc.saveHistorique();
+            System.out.println("Save");
+        }else
+        if (e.getSource() == LoadHistorique ){
+            sc.restorHistorique();
+        }else
+        if (e.getSource() == SupHistorique ){
+            
+        }
     }
     public void addMessage(String message){
         Message.add(message);
