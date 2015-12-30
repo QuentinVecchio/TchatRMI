@@ -35,11 +35,11 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 	private JLabel hostLabel2 = new JLabel("");
 	private JLabel portLabel2 = new JLabel("");
 	private JButton deconnectionButton = new JButton();
-	private JList clientsList;
+	private JList<String> clientsList;
 	private JEditorPane messagesArea = new JEditorPane();
 	private JButton sendButton = new JButton("");
 	private JTextField messageTextField = new JTextField("");
-	private DefaultListModel listClients;
+	private DefaultListModel<String> listClients;
 	private ClientRMIController c;
 	private String allMessage = "";
 	private JScrollPane scroll;
@@ -74,7 +74,7 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 		} else if (e.getSource() == sendButton) {
 			String s = "all";
 			if(clientsList.isSelectionEmpty() == false) {
-				s = clientsList.getSelectedValue();
+				s = (String) clientsList.getSelectedValue();
 				clientsList.clearSelection();
 			}
 			Message m = new Message(c.GetName(), s, messageTextField.getText(),c.GetColor());
@@ -104,8 +104,8 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 	
 	private void BuildGUILeft() {
 		JPanel panelLeft = new JPanel();
-		listClients = new DefaultListModel();
-		clientsList = new JList(listClients);
+		listClients = new DefaultListModel<String>();
+		clientsList = new JList<String>(listClients);
 		clientsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		clientsList.setLayoutOrientation(JList.VERTICAL);
 		clientsList.setVisibleRowCount(-1);
