@@ -15,6 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Vector;
 
 import protocole.CommunicationProtocol;
+import protocole.Message;
 import protocole.MessageProtocol;
 
 public class ServerRMIController {
@@ -41,7 +42,7 @@ public class ServerRMIController {
     public void InitServeur(int port){
         try {
             s = new Server(port);
-            obj = new Tchat();
+            obj = new Tchat(this);
             stub = (CommunicationProtocol) UnicastRemoteObject.exportObject(obj, 0);
             // Bind the remote object's stub in the registry
             java.rmi.registry.LocateRegistry.createRegistry(s.getPort());
@@ -60,7 +61,11 @@ public class ServerRMIController {
             try {
               final FileOutputStream fichier = new FileOutputStream("donnees.ser");
               oos = new ObjectOutputStream(fichier);
-              oos.writeObject(obj.getMessage());
+                Integer size =(Integer) obj.getMessage().size();
+                oos.writeObject(size);
+                for (MessageProtocol m : obj.getMessage()){
+                    oos.writeObject((Message) m );
+                }
               oos.flush();
             } catch (final java.io.IOException e) {
               e.printStackTrace();
@@ -77,10 +82,16 @@ public class ServerRMIController {
     }
     public void restorHistorique(){
         ObjectInputStream ois = null;
+
         try {
             final FileInputStream fichier = new FileInputStream("donnees.ser");
             ois = new ObjectInputStream(fichier);
-            Vector<MessageProtocol> messageList = (Vector<MessageProtocol>) ois.readObject();
+            Integer size = (Integer)ois.readObject();
+            System.out.println(size);
+            Vector<MessageProtocol> messageList = new Vector<MessageProtocol>();
+            for (int i = 0 ; i< size; i++){
+                messageList.add((Message)ois.readObject());
+            }
             obj.setMessage(messageList);
             for (MessageProtocol m: messageList){
                 sv.addMessage(m.GetMessage());

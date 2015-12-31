@@ -13,8 +13,10 @@ import protocole.MessageProtocol;
 public class Tchat implements CommunicationProtocol {
 	private Vector<ClientTchat> clients = new Vector<ClientTchat>();
 	private Vector<MessageProtocol> messages = new Vector<MessageProtocol>();
+        private ServerRMIController sc;
 	
-    public Tchat()  {
+    public Tchat(ServerRMIController aSc)  {
+        sc =aSc;
     	
     }
 
@@ -24,6 +26,7 @@ public class Tchat implements CommunicationProtocol {
     	} else {
 	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
+                sc.getServerView().addClient(c.GetName());
 	    	for(int i=0;i<messages.size();i++) {
 	    		c.Receive(messages.get(i));
 	    	}
@@ -45,6 +48,7 @@ public class Tchat implements CommunicationProtocol {
     public void Disconnection(ClientTchat c) throws RemoteException{
     	Message m = new Message(c.GetName(), "all", c.GetName() + " est déconnecté", c.GetColor());
     	messages.add(m);
+        sc.getServerView().addMessage(m.GetMessage());
     	clients.remove(c);
     	for(int i=0;i<clients.size();i++) {
     		try {
@@ -60,6 +64,7 @@ public class Tchat implements CommunicationProtocol {
     public void Send(MessageProtocol message) {	
     	Message m = new Message(message);
     	messages.add(m);
+        sc.getServerView().addMessage(m.GetMessage());
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);
