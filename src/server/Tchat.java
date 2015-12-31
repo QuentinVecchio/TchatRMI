@@ -1,7 +1,5 @@
 package server;
 
-import client.Client;
-
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import client.ClientTchat;
@@ -13,20 +11,19 @@ import protocole.Message;
 import protocole.MessageProtocol;
 
 public class Tchat implements CommunicationProtocol {
-        private ServerRMIController sc;
-        private Vector<ClientTchat> clients = new Vector<ClientTchat>();
-        private Vector<MessageProtocol> messages = new Vector<MessageProtocol>();
+	private Vector<ClientTchat> clients = new Vector<ClientTchat>();
+	private Vector<MessageProtocol> messages = new Vector<MessageProtocol>();
 	
-    public Tchat(ServerRMIController aSc)  {
-        sc = aSc;
+    public Tchat()  {
+    	
     }
 
     public boolean Register(ClientTchat c) throws RemoteException {
     	if(NameExist(c.GetName())) {
     		return false;
     	} else {
+	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
-                sc.getServerView().addClient( c.GetName());
 	    	for(int i=0;i<messages.size();i++) {
 	    		c.Receive(messages.get(i));
 	    	}
@@ -48,6 +45,7 @@ public class Tchat implements CommunicationProtocol {
     public void Disconnection(ClientTchat c) throws RemoteException{
     	Message m = new Message(c.GetName(), "all", c.GetName() + " est déconnecté", c.GetColor());
     	messages.add(m);
+    	clients.remove(c);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(m);
@@ -57,19 +55,11 @@ public class Tchat implements CommunicationProtocol {
                 e.printStackTrace();
             }
     	}
-    	clients.remove(c.GetName());
     }
     
     public void Send(MessageProtocol message) {	
-    	messages.add(message);
-
-        try {
-            sc.getServerView().addMessage(message.GetMessage());
-            System.out.println(message.GetMessage());
-        } catch (Exception e) {
-            System.err.println("Tchat exception: " + e.toString());
-            e.printStackTrace();
-        }
+    	Message m = new Message(message);
+    	messages.add(m);
     	for(int i=0;i<clients.size();i++) {
     		try {
     			clients.get(i).Receive(message);
@@ -93,6 +83,7 @@ public class Tchat implements CommunicationProtocol {
     	}
     	return false;
     }
+
     public Vector<ClientTchat> getClients() {
         return clients;
     }
@@ -102,4 +93,5 @@ public class Tchat implements CommunicationProtocol {
     public void setMessage(Vector<MessageProtocol> messageList){
         messages = messageList;
     }
+
 }

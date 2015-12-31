@@ -41,7 +41,7 @@ public class ServerRMIController {
     public void InitServeur(int port){
         try {
             s = new Server(port);
-            obj = new Tchat(this);
+            obj = new Tchat();
             stub = (CommunicationProtocol) UnicastRemoteObject.exportObject(obj, 0);
             // Bind the remote object's stub in the registry
             java.rmi.registry.LocateRegistry.createRegistry(s.getPort());
