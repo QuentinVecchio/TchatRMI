@@ -61,10 +61,15 @@ public class ServerRMIController {
             try {
               final FileOutputStream fichier = new FileOutputStream("donnees.ser");
               oos = new ObjectOutputStream(fichier);
-                Integer size =(Integer) obj.getMessage().size();
-                oos.writeObject(size);
+                Integer sizeMessage =(Integer) obj.getMessage().size();
+                Integer sizePsudoForbiden = (Integer) obj.getPsudoForbiden().size();
+                oos.writeObject(sizeMessage);
+                oos.writeObject(sizePsudoForbiden);
                 for (MessageProtocol m : obj.getMessage()){
                     oos.writeObject((Message) m );
+                }
+                for(String s : obj.getPsudoForbiden()){
+                    oos.writeObject( s );
                 }
               oos.flush();
             } catch (final java.io.IOException e) {
@@ -86,15 +91,20 @@ public class ServerRMIController {
         try {
             final FileInputStream fichier = new FileInputStream("donnees.ser");
             ois = new ObjectInputStream(fichier);
-            Integer size = (Integer)ois.readObject();
-            System.out.println(size);
+            Integer sizeMessage =(Integer)ois.readObject();;
+            Integer sizePsudoForbiden = (Integer)ois.readObject();
             Vector<MessageProtocol> messageList = new Vector<MessageProtocol>();
-            for (int i = 0 ; i< size; i++){
+            for (int i = 0 ; i< sizeMessage; i++){
                 messageList.add((Message)ois.readObject());
             }
+            Vector<String> PsudoForbiden = new Vector<String>();
+            for (int i = 0 ; i< sizePsudoForbiden; i++){
+                PsudoForbiden.add((String)ois.readObject());
+            }
             obj.setMessage(messageList);
+            obj.setPsudoForbiden(PsudoForbiden);
             for (MessageProtocol m: messageList){
-                sv.addMessage(m.GetMessage());
+                sv.addMessage(m.GetExpediteur()+" > "+m.GetDestinataire()+": "+m.GetMessage());
             }
         } catch (final java.io.IOException e) {
           e.printStackTrace();
@@ -108,7 +118,12 @@ public class ServerRMIController {
           } catch (final IOException ex) {
             ex.printStackTrace();
           }
-        }   
+        }
+    }
+        public void eraseHistorique(){
+            obj.eraseMessages();
+            obj.erasePsudoForbiden();
+            saveHistorique();
     }
     public Tchat getTchar(){
         return obj;
