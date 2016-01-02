@@ -13,9 +13,9 @@ import protocole.Message;
 import protocole.MessageProtocol;
 
 public class Tchat implements CommunicationProtocol {
-	private Vector<ClientTchat> clients = new Vector<ClientTchat>();
-	private Vector<MessageProtocol> messages = new Vector<MessageProtocol>();
-        private Vector<String> PsudoForbiden = new Vector<String>();
+	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
+	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
+        private LinkedList<String> PsudoForbiden = new LinkedList<String>();
         private ServerRMIController sc;
 
 	
@@ -33,19 +33,19 @@ public class Tchat implements CommunicationProtocol {
 	    	System.out.println("Le client <" + c.GetName() + "> est connecté");
 	    	clients.add(c);
                 sc.getServerView().addClient(c.GetName());
-	    	for(int i=0;i<messages.size();i++) {
-	    		c.Receive(messages.get(i));
+            for(MessageProtocol ms : messages) {
+	    		c.Receive(ms);
 	    	}
 	    	Message m = new Message(c.GetName(), "all", c.GetName() + " est connecté", c.GetColor());
 	    	messages.add(m);
-	    	for(int i=0;i<clients.size();i++) {
-	    		clients.get(i).Receive(m);
-	    		if(clients.get(i).GetName().equals(c.GetName()) == false) {
-	    			clients.get(i).AddClient(c.GetName());
+            for(ClientTchat cl : clients) {
+	    		cl.Receive(m);
+	    		if(cl.GetName().equals(c.GetName()) == false) {
+	    			cl.AddClient(c.GetName());
 	    		}
 	    	}
-	    	for(int i=0;i<clients.size();i++) {
-	    		c.AddClient(clients.get(i).GetName());
+	    	for(ClientTchat cl : clients) {
+	    		c.AddClient(cl.GetName());
 	    	}
 	    	return true;
     	}
@@ -57,10 +57,10 @@ public class Tchat implements CommunicationProtocol {
         sc.getServerView().addMessage(m.GetExpediteur()+" > "+m.GetDestinataire()+" :"+m.GetMessage());
     	clients.remove(c);
         sc.getServerView().supClient(c.GetName());
-    	for(int i=0;i<clients.size();i++) {
+        for(ClientTchat cl : clients) {
     		try {
-    			clients.get(i).Receive(m);
-    			clients.get(i).DeleteClient(c.GetName());
+    			cl.Receive(m);
+    			cl.DeleteClient(c.GetName());
     		} catch (Exception e) {
                 System.err.println("Tchat exception: " + e.toString());
                 e.printStackTrace();
@@ -152,26 +152,26 @@ public class Tchat implements CommunicationProtocol {
     }
 
 
-    public Vector<ClientTchat> getClients() {
+    public LinkedList<ClientTchat> getClients() {
         return clients;
     }
-    public Vector<MessageProtocol> getMessage(){
+    public LinkedList<MessageProtocol> getMessage(){
         return messages;
     }
-    public Vector<String> getPsudoForbiden(){
+    public LinkedList<String> getPsudoForbiden(){
         return PsudoForbiden;
     }
-    public void setMessage(Vector<MessageProtocol> messageList){
+    public void setMessage(LinkedList<MessageProtocol> messageList){
         messages = messageList;
     }
-    public void setPsudoForbiden(Vector<String> aPsudoForbiden){
+    public void setPsudoForbiden(LinkedList<String> aPsudoForbiden){
         PsudoForbiden = aPsudoForbiden;
     }
     public void eraseMessages(){
-        messages = new Vector<MessageProtocol>();
+        messages = new LinkedList<MessageProtocol>();
     }
     public void erasePsudoForbiden(){
-        PsudoForbiden = new Vector<String>();
+        PsudoForbiden.clear();
         PsudoForbiden.add("Server");
         PsudoForbiden.add("Moderateur");
     }

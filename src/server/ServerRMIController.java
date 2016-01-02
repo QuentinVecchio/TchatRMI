@@ -12,6 +12,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
 import protocole.CommunicationProtocol;
@@ -93,11 +94,11 @@ public class ServerRMIController {
             ois = new ObjectInputStream(fichier);
             Integer sizeMessage =(Integer)ois.readObject();;
             Integer sizePsudoForbiden = (Integer)ois.readObject();
-            Vector<MessageProtocol> messageList = new Vector<MessageProtocol>();
+            LinkedList<MessageProtocol> messageList = new LinkedList<MessageProtocol>();
             for (int i = 0 ; i< sizeMessage; i++){
                 messageList.add((Message)ois.readObject());
             }
-            Vector<String> PsudoForbiden = new Vector<String>();
+            LinkedList<String> PsudoForbiden = new LinkedList<String>();
             for (int i = 0 ; i< sizePsudoForbiden; i++){
                 PsudoForbiden.add((String)ois.readObject());
             }
