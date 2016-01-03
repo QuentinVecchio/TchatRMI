@@ -21,6 +21,7 @@ public class Tchat implements CommunicationProtocol {
     }
 
     public boolean Register(ClientTchat c) throws RemoteException {
+    	System.out.println("ok");
     	if(NameExist(c.GetName())) {
     		return false;
     	} else {
