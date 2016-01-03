@@ -13,6 +13,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
 import protocole.CommunicationProtocol;
@@ -39,7 +40,11 @@ public class ServerRMIController {
     public void run (){
         sv = new ServerView(this);
     }
-    
+
+    /**
+     * inicialisation du Serveur
+     * @param port : numereau de port au quel le seveur ce connect
+     */
     public void InitServeur(int port){
         try {
             s = new Server(port);
@@ -57,15 +62,24 @@ public class ServerRMIController {
             e.printStackTrace();
         }       
     }
+
+    /**
+     * Sauvgarde l'historique.
+     */
     public void saveHistorique(){
         ObjectOutputStream oos = null;
             try {
               final FileOutputStream fichier = new FileOutputStream("donnees.ser");
               oos = new ObjectOutputStream(fichier);
-                Integer size =(Integer) obj.getMessage().size();
-                oos.writeObject(size);
+                Integer sizeMessage =(Integer) obj.getMessage().size();
+                Integer sizePsudoForbiden = (Integer) obj.getPsudoForbiden().size();
+                oos.writeObject(sizeMessage);
+                oos.writeObject(sizePsudoForbiden);
                 for (MessageProtocol m : obj.getMessage()){
                     oos.writeObject((Message) m );
+                }
+                for(String s : obj.getPsudoForbiden()){
+                    oos.writeObject( s );
                 }
               oos.flush();
             } catch (final java.io.IOException e) {
@@ -81,21 +95,30 @@ public class ServerRMIController {
               }
             }
     }
+
+    /**
+     * charge l'historique préalablement sovgarder
+     */
     public void restorHistorique(){
         ObjectInputStream ois = null;
 
         try {
             final FileInputStream fichier = new FileInputStream("donnees.ser");
             ois = new ObjectInputStream(fichier);
-            Integer size = (Integer)ois.readObject();
-            System.out.println(size);
-            Vector<MessageProtocol> messageList = new Vector<MessageProtocol>();
-            for (int i = 0 ; i< size; i++){
+            Integer sizeMessage =(Integer)ois.readObject();;
+            Integer sizePsudoForbiden = (Integer)ois.readObject();
+            LinkedList<MessageProtocol> messageList = new LinkedList<MessageProtocol>();
+            for (int i = 0 ; i< sizeMessage; i++){
                 messageList.add((Message)ois.readObject());
             }
+            LinkedList<String> PsudoForbiden = new LinkedList<String>();
+            for (int i = 0 ; i< sizePsudoForbiden; i++){
+                PsudoForbiden.add((String)ois.readObject());
+            }
             obj.setMessage(messageList);
+            obj.setPsudoForbiden(PsudoForbiden);
             for (MessageProtocol m: messageList){
-                sv.addMessage(m.GetMessage());
+                sv.addMessage(m.GetExpediteur()+" > "+m.GetDestinataire()+": "+m.GetMessage());
             }
         } catch (final java.io.IOException e) {
           e.printStackTrace();
@@ -109,19 +132,28 @@ public class ServerRMIController {
           } catch (final IOException ex) {
             ex.printStackTrace();
           }
-        }   
+        }
     }
+        public void eraseHistorique(){
+            obj.eraseMessages();
+            obj.erasePsudoForbiden();
+            saveHistorique();
+    }
+
+    /**
+     * @return
+     *      l'objet Tchat au quel est lier le Serveur
+     */
     public Tchat getTchar(){
         return obj;
     }
+
+    /**
+     * @return
+     *      la vue de serveur (ServerView)
+     */
     public ServerView getServerView(){
         return sv;
     }
     
-    
-    //-------------------NOT RMI---------------------//
-    public void StartNotRIM(){
-        scv = new ServerCreatView(this);
-        scv.setVisible(true);
-    }
 }
