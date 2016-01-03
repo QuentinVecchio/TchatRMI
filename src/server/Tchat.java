@@ -23,9 +23,18 @@ public class Tchat implements CommunicationProtocol {
         sc =aSc;
         PsudoForbiden.add("Server");
         PsudoForbiden.add("Moderateur");
+        PsudoForbiden.add("all");
 
     }
 
+    /**
+     * enregistrement d'un client avent de pouvoir commencer à échanger. 
+     * @param c 
+     *          ClientTchat à enregistré
+     * @return
+     *          true si l'enrgistrement a été eféctuer false sinon.
+     * @throws RemoteException
+     */
     public boolean Register(ClientTchat c) throws RemoteException {
     	if(NameCanBeUse(c.GetName())) {
     		return false;
@@ -50,7 +59,13 @@ public class Tchat implements CommunicationProtocol {
 	    	return true;
     	}
     }
-    
+
+    /**
+     * déconection d'un Client.
+     * @param c 
+     *          Client a déconécter.
+     * @throws RemoteException
+     */
     public void Disconnection(ClientTchat c) throws RemoteException{
     	Message m = new Message(c.GetName(), "all", c.GetName() + " est dÃ©connectÃ©", c.GetColor());
     	messages.add(m);
@@ -67,7 +82,12 @@ public class Tchat implements CommunicationProtocol {
             }
     	}
     }
-    
+
+    /**
+     * envoyer un messages au(x) déstinatére(s) et renvoye le massage a l'expéditeur. 
+     * @param message
+     *          Message a envoyer
+     */
     public void Send(MessageProtocol message) {	
     try {
         if (NameExist(message.GetExpediteur())){
@@ -90,6 +110,12 @@ public class Tchat implements CommunicationProtocol {
         e.printStackTrace();
         }
     }
+
+    /**
+     * banie un client, sont pesudo ne peut plus étre utiliser et se jusqu'a ce que l'historique soit suprimer.
+     * @param name
+     *          nom de client a banire.
+     */
     public void BanishClient(String name){
         ClientTchat toBanish = FindClient(name);
         try {
@@ -102,7 +128,6 @@ public class Tchat implements CommunicationProtocol {
         }
         PsudoForbiden.add(name);
     }
-    
     private ClientTchat FindClient(String name){
         for(ClientTchat c :clients) {
                 try {
@@ -152,28 +177,62 @@ public class Tchat implements CommunicationProtocol {
     }
 
 
+    /**
+     * @return  
+     *          liste des client conecter.
+     */
     public LinkedList<ClientTchat> getClients() {
         return clients;
     }
+
+    /**
+     * @return
+     *          liste des messages échangés.
+     */
     public LinkedList<MessageProtocol> getMessage(){
         return messages;
     }
+
+    /**
+     * @return
+     *      liste des pseudo interdits.
+     */
     public LinkedList<String> getPsudoForbiden(){
         return PsudoForbiden;
     }
+
+    /**
+     * remplasse la liste de massages pas une nouvel 
+     * @param messageList
+     *      nouvel liste des message 
+     */
     public void setMessage(LinkedList<MessageProtocol> messageList){
         messages = messageList;
     }
-    public void setPsudoForbiden(LinkedList<String> aPsudoForbiden){
+    
+    /**
+     * remplasse la liste de pseudo Interdis  pas une nouvel 
+     * @param aPsudoForbiden
+     *      nouvel liste des pseudo Interdis 
+     */public void setPsudoForbiden(LinkedList<String> aPsudoForbiden){
         PsudoForbiden = aPsudoForbiden;
     }
+
+    /**
+     * vide la liset des message.
+     */
     public void eraseMessages(){
         messages = new LinkedList<MessageProtocol>();
     }
+
+    /**
+     * vide la liste de pseudo Interdis et y remplasse les 3 pseudo inutilisable. 
+     */
     public void erasePsudoForbiden(){
         PsudoForbiden.clear();
         PsudoForbiden.add("Server");
         PsudoForbiden.add("Moderateur");
+        PsudoForbiden.add("all");
     }
 
 }

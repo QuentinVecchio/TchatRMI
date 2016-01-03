@@ -64,10 +64,9 @@ public class ServerView extends JFrame implements ActionListener , WindowListene
     private BorderLayout flowLayoutMode = new BorderLayout();
     private JButton BanisheClient = new JButton();
     private JButton SendeMessageto = new JButton(); 
-    private JTextField  MessageToSende = new JTextField(); 
+    private JTextField  MessageToSende = new JTextField();
 
 
-    
     public ServerView(ServerRMIController asc ) {
         sc = asc;
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE );
@@ -153,23 +152,50 @@ public class ServerView extends JFrame implements ActionListener , WindowListene
             System.out.print(MessageToSende.getText());
         }
 }
+
+    /**
+     * ajoute et affiche un message dans la liste des message afficher 
+     * @param message 
+     *          nouveau message a afficher
+     */
     public void addMessage(String message){
         Message.add(message);
         MessageListe.setListData(Message);
     }
+
+    /**
+     * Suprime tout les messages dans la liste des message afficher 
+     */
     public void eraseAllMessages(){
         Message.clear();
         MessageListe.setListData(Message);
     }
+    /**
+     * ajoute et affiche un client dans la liste des client afficher.
+     * @param client
+     * nouveau client à afficher
+     */
     public void addClient(String client){
         Clients.add(client);
         ClientListe.setListData(Clients);
     }
+
+    /**
+     * supprime un client de la liset des client afficher.
+     * @param client
+     *          client a suprimer 
+     */
     public void supClient(String client){
         Clients.remove(client);
         ClientListe.setListData(Clients);
     }
-	public void windowClosing(WindowEvent e) {
+
+    /**
+     * propose d'enregistré le contenue de la convercation avent de fermer 
+     * @param e 
+     *      WindowEvent
+     */
+    public void windowClosing(WindowEvent e) {
 	    int anser = JOptionPane.showConfirmDialog(null,"voulez vous sovgarder l'historique?");
         if (anser == JOptionPane.YES_OPTION){
             sc.saveHistorique();

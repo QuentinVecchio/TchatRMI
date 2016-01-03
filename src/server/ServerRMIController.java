@@ -39,7 +39,11 @@ public class ServerRMIController {
     public void run (){
         sv = new ServerView(this);
     }
-    
+
+    /**
+     * inicialisation du Serveur
+     * @param port : numereau de port au quel le seveur ce connect
+     */
     public void InitServeur(int port){
         try {
             s = new Server(port);
@@ -57,6 +61,10 @@ public class ServerRMIController {
             e.printStackTrace();
         }       
     }
+
+    /**
+     * Sauvgarde l'historique.
+     */
     public void saveHistorique(){
         ObjectOutputStream oos = null;
             try {
@@ -86,6 +94,10 @@ public class ServerRMIController {
               }
             }
     }
+
+    /**
+     * charge l'historique préalablement sovgarder
+     */
     public void restorHistorique(){
         ObjectInputStream ois = null;
 
@@ -126,17 +138,21 @@ public class ServerRMIController {
             obj.erasePsudoForbiden();
             saveHistorique();
     }
+
+    /**
+     * @return
+     *      l'objet Tchat au quel est lier le Serveur
+     */
     public Tchat getTchar(){
         return obj;
     }
+
+    /**
+     * @return
+     *      la vue de serveur (ServerView)
+     */
     public ServerView getServerView(){
         return sv;
     }
     
-    
-    //-------------------NOT RMI---------------------//
-    public void StartNotRIM(){
-        scv = new ServerCreatView(this);
-        scv.setVisible(true);
-    }
 }
