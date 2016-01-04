@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Color;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -117,4 +118,8 @@ public class ClientRMIController implements ClientTchat {
     public String toString(){
         return c.GetName();
     }
+
+	public void Deconnect() throws RemoteException {
+		this.view.DeconnectError();
+	}
 }

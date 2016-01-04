@@ -1,13 +1,9 @@
 package server;
 
-import client.Client;
-
+import java.awt.Color;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import client.ClientTchat;
-
-import java.util.Vector;
-
 import protocole.CommunicationProtocol;
 import protocole.Message;
 import protocole.MessageProtocol;
@@ -15,24 +11,24 @@ import protocole.MessageProtocol;
 public class Tchat implements CommunicationProtocol {
 	private LinkedList<ClientTchat> clients = new LinkedList<ClientTchat>();
 	private LinkedList<MessageProtocol> messages = new LinkedList<MessageProtocol>();
-        private LinkedList<String> PsudoForbiden = new LinkedList<String>();
-        private ServerRMIController sc;
+	private LinkedList<String> PseudoForbiden = new LinkedList<String>();
+    private ServerRMIController sc;
 
 	
     public Tchat(ServerRMIController aSc)  {
-        sc =aSc;
-        PsudoForbiden.add("Server");
-        PsudoForbiden.add("Moderateur");
-        PsudoForbiden.add("all");
+        sc = aSc;
+        PseudoForbiden.add("Server");
+        PseudoForbiden.add("Moderateur");
+        PseudoForbiden.add("all");
 
     }
 
     /**
-     * enregistrement d'un client avent de pouvoir commencer à échanger. 
+     * enregistrement d'un client avent de pouvoir commencer Ã  Ã©changer. 
      * @param c 
-     *          ClientTchat à enregistré
+     *          ClientTchat Ã  enregistrer
      * @return
-     *          true si l'enrgistrement a été eféctuer false sinon.
+     *          true si l'enrgistrement a Ã©tÃ© effectuÃ© false sinon.
      * @throws RemoteException
      */
     public boolean Register(ClientTchat c) throws RemoteException {
@@ -47,6 +43,7 @@ public class Tchat implements CommunicationProtocol {
 	    	}
 	    	Message m = new Message(c.GetName(), "all", c.GetName() + " est connectÃ©", c.GetColor());
 	    	messages.add(m);
+	    	sc.getServerView().AddMessage(m);  
             for(ClientTchat cl : clients) {
 	    		cl.Receive(m);
 	    		if(cl.GetName().equals(c.GetName()) == false) {
@@ -61,15 +58,15 @@ public class Tchat implements CommunicationProtocol {
     }
 
     /**
-     * déconection d'un Client.
+     * dÃ©conection d'un Client.
      * @param c 
-     *          Client a déconécter.
+     *          Client Ã  dÃ©connecter.
      * @throws RemoteException
      */
     public void Disconnection(ClientTchat c) throws RemoteException{
     	Message m = new Message(c.GetName(), "all", c.GetName() + " est dÃ©connectÃ©", c.GetColor());
     	messages.add(m);
-        sc.getServerView().addMessage(m.GetExpediteur()+" > "+m.GetDestinataire()+" :"+m.GetMessage());
+        sc.getServerView().AddMessage(m);
     	clients.remove(c);
         sc.getServerView().supClient(c.GetName());
         for(ClientTchat cl : clients) {
@@ -84,17 +81,16 @@ public class Tchat implements CommunicationProtocol {
     }
 
     /**
-     * envoyer un messages au(x) déstinatére(s) et renvoye le massage a l'expéditeur. 
+     * envoyer un messages au(x) destinataire(s) et renvoye le message a l'expecditeur. 
      * @param message
-     *          Message a envoyer
+     *          Message Ã  envoyer
      */
     public void Send(MessageProtocol message) {	
     try {
         if (NameExist(message.GetExpediteur())){
             Message m = new Message(message);
             messages.add(m);
-            sc.getServerView().addMessage(m.GetExpediteur()+" > "+m.GetDestinataire()+": "+m.GetMessage());
-            
+            sc.getServerView().AddMessage(m);      
             for(ClientTchat c :clients) {
                 if (message.GetDestinataire().equals("all") 
                             || 
@@ -110,24 +106,69 @@ public class Tchat implements CommunicationProtocol {
         e.printStackTrace();
         }
     }
+    
+    /**
+     * envoyer un messages au(x) destinataire(s). 
+     * @param message
+     *          Message Ã  envoyer
+     */
+    public void SendSpecial(MessageProtocol message) {	
+        try {
+                Message m = new Message(message);
+                messages.add(m);
+                sc.getServerView().AddMessage(m);      
+                for(ClientTchat c :clients) {
+                    if (message.GetDestinataire().equals("all") 
+                                || 
+                        message.GetDestinataire().equals(c.GetName()) 
+                                ||
+                        message.GetExpediteur().equals(c.GetName())){
+                        c.Receive(message);
+                    }
+                }
+            } catch (Exception e) {
+            System.err.println("Tchat exception: " + e.toString());
+            e.printStackTrace();
+            }
+        }
 
     /**
-     * banie un client, sont pesudo ne peut plus étre utiliser et se jusqu'a ce que l'historique soit suprimer.
+     * banie un client, son pesudo ne peut plus Ãªtre utilisÃ© et ce jusqu'a ce que l'historique soit supprimÃ©.
      * @param name
-     *          nom de client a banire.
+     *          nom du client Ã  banire.
      */
     public void BanishClient(String name){
         ClientTchat toBanish = FindClient(name);
         try {
-            toBanish.Receive(new Message("Moderateur", toBanish.GetName(), "Vous avez été bannie", toBanish.GetColor()));
+            toBanish.Receive(new Message("Moderateur", toBanish.GetName(), "Vous avez Ã©tÃ© bannie", toBanish.GetColor()));
             Disconnection(toBanish);
             
         } catch (Exception e) {
         System.err.println("Tchat exception: " + e.toString());
         e.printStackTrace();
         }
-        PsudoForbiden.add(name);
+        PseudoForbiden.add(name);
     }
+    
+    /**
+     * deconnecte tous les clients
+     * @param name
+     *          nom du client Ã  banire.
+     */
+    public void DeconnectAll() {
+    	for(ClientTchat c :clients) {
+    		try {
+    			Message m = new Message("Server","all","ArrÃªt du serveur", Color.RED);
+    			SendSpecial(m);
+				c.Deconnect();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+        }
+    	clients.remove();
+    	messages.remove();
+    }
+    
     private ClientTchat FindClient(String name){
         for(ClientTchat c :clients) {
                 try {
@@ -141,6 +182,7 @@ public class Tchat implements CommunicationProtocol {
         }
         return null;
     }
+    
     private boolean NameExist(String name) {
         for(ClientTchat c :clients) {
                 try {
@@ -157,6 +199,7 @@ public class Tchat implements CommunicationProtocol {
         }
         return false;
     }
+    
     private boolean NameCanBeUse(String name) {
     	for(ClientTchat c :clients) {
     		try {
@@ -168,7 +211,7 @@ public class Tchat implements CommunicationProtocol {
                 e.printStackTrace();
             }
     	}
-        for (String s :PsudoForbiden){
+        for (String s :PseudoForbiden){
             if(s.equals(name)) {
                     return true;
             }
@@ -179,7 +222,7 @@ public class Tchat implements CommunicationProtocol {
 
     /**
      * @return  
-     *          liste des client conecter.
+     *          liste des clients connectÃ©.
      */
     public LinkedList<ClientTchat> getClients() {
         return clients;
@@ -187,7 +230,7 @@ public class Tchat implements CommunicationProtocol {
 
     /**
      * @return
-     *          liste des messages échangés.
+     *          liste des messages Ã©changes.
      */
     public LinkedList<MessageProtocol> getMessage(){
         return messages;
@@ -198,7 +241,7 @@ public class Tchat implements CommunicationProtocol {
      *      liste des pseudo interdits.
      */
     public LinkedList<String> getPsudoForbiden(){
-        return PsudoForbiden;
+        return PseudoForbiden;
     }
 
     /**
@@ -215,24 +258,24 @@ public class Tchat implements CommunicationProtocol {
      * @param aPsudoForbiden
      *      nouvel liste des pseudo Interdis 
      */public void setPsudoForbiden(LinkedList<String> aPsudoForbiden){
-        PsudoForbiden = aPsudoForbiden;
+        PseudoForbiden = aPsudoForbiden;
     }
 
     /**
-     * vide la liset des message.
+     * vide la liste des messages.
      */
     public void eraseMessages(){
         messages = new LinkedList<MessageProtocol>();
     }
 
     /**
-     * vide la liste de pseudo Interdis et y remplasse les 3 pseudo inutilisable. 
+     * vide la liste de pseudo Interdis et y remplace les 3 pseudos inutilisable. 
      */
     public void erasePsudoForbiden(){
-        PsudoForbiden.clear();
-        PsudoForbiden.add("Server");
-        PsudoForbiden.add("Moderateur");
-        PsudoForbiden.add("all");
+        PseudoForbiden.clear();
+        PseudoForbiden.add("Server");
+        PseudoForbiden.add("Moderateur");
+        PseudoForbiden.add("all");
     }
 
 }

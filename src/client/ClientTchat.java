@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import protocole.MessageProtocol;
 
 public interface ClientTchat extends Remote{
+	public void Deconnect() throws RemoteException;
 	public void Receive(MessageProtocol message) throws RemoteException;
 	public void AddClient(String client) throws RemoteException;
 	public void DeleteClient(String client) throws RemoteException;
