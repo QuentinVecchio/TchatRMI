@@ -14,7 +14,11 @@ public class Tchat implements CommunicationProtocol {
 	private LinkedList<String> PseudoForbiden = new LinkedList<String>();
     private ServerRMIController sc;
 
-	
+    /**
+     *Constructeur de la classe Tchat. 
+     * @param aSc 
+     *         Controlleur du Serveur
+     */
     public Tchat(ServerRMIController aSc)  {
         sc = aSc;
         PseudoForbiden.add("Server");
@@ -58,7 +62,7 @@ public class Tchat implements CommunicationProtocol {
     }
 
     /**
-     * déconection d'un Client.
+     * déconnection d'un Client.
      * @param c 
      *          Client à déconnecter.
      * @throws RemoteException
@@ -92,13 +96,13 @@ public class Tchat implements CommunicationProtocol {
             messages.add(m);
             sc.getServerView().AddMessage(m);      
             for(ClientTchat c :clients) {
-                if (message.GetDestinataire().equals("all") 
-                            || 
-                    message.GetDestinataire().equals(c.GetName()) 
-                            ||
-                    message.GetExpediteur().equals(c.GetName())){
-                    c.Receive(message);
-                }
+            	if(message.GetDestinataire().equals("all")) {
+            		 c.Receive(message);
+            	} else {
+            		if (message.GetDestinataire().equals(c.GetName())  || message.GetExpediteur().equals(c.GetName())){
+                        c.Receive(message);
+                    }
+            	}
             }
         }
         } catch (Exception e) {
@@ -169,6 +173,13 @@ public class Tchat implements CommunicationProtocol {
     	messages.remove();
     }
     
+    /**
+     * Recherche d'un client 
+     * @param name
+     *          Nom du client
+     * @return
+     *          le client si il est trouvé, null sinon
+     */
     private ClientTchat FindClient(String name){
         for(ClientTchat c :clients) {
                 try {
@@ -183,6 +194,13 @@ public class Tchat implements CommunicationProtocol {
         return null;
     }
     
+    /**
+     * Recherche d'un nom de client existant 
+     * @param name
+     *          Nom du client
+     * @return
+     *          true si il est trouvé, false sinon
+     */
     private boolean NameExist(String name) {
         for(ClientTchat c :clients) {
                 try {
@@ -200,6 +218,13 @@ public class Tchat implements CommunicationProtocol {
         return false;
     }
     
+    /**
+     * Test si le pseudo n'est pas utilisé ou si il est interdit 
+     * @param name
+     *          Nom du client
+     * @return
+     *          true si il est utilisable, false sinon
+     */
     private boolean NameCanBeUse(String name) {
     	for(ClientTchat c :clients) {
     		try {
@@ -271,7 +296,7 @@ public class Tchat implements CommunicationProtocol {
     /**
      * vide la liste de pseudo Interdis et y remplace les 3 pseudos inutilisable. 
      */
-    public void erasePsudoForbiden(){
+    public void erasePseudoForbiden(){
         PseudoForbiden.clear();
         PseudoForbiden.add("Server");
         PseudoForbiden.add("Moderateur");

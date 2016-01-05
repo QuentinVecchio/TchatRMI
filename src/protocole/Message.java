@@ -15,6 +15,14 @@ public class Message implements MessageProtocol, Serializable {
 	private String message;
 	private Color color;
 	
+	/**
+	 * Constructeur de la classe Message
+	 * 
+     * @param expediteur : nom de l'expediteur
+     * @param destinataire : nom du destinataire
+     * @param message : le message
+     * @param c : la couleur du message
+     */
 	public Message(String expediteur, String destinataire, String message, Color c) {
 		try {
 			this.expediteur = expediteur;
@@ -28,7 +36,13 @@ public class Message implements MessageProtocol, Serializable {
 		}
 		
 	}
-
+	
+	/**
+	 * Constructeur de la classe Message
+	 * 
+     * @param message : le message
+     *
+     */
 	public Message(MessageProtocol message) {
 		try {
 			this.message = message.GetMessage();
@@ -77,7 +91,8 @@ public class Message implements MessageProtocol, Serializable {
 	public void SetColor(Color c) {
 		this.color = c;
 	}
-        public String toString(){
-            return "<span style=\"color : rgb(" + GetColor().getRed() + "," + GetColor().getGreen() + "," + GetColor().getBlue() + ")\">" + GetExpediteur() + " > " + GetDestinataire() + " : " + GetMessage() + "</<span></br>";
-        }
+        
+	public String toString(){
+		return "<span style=\"color : rgb(" + GetColor().getRed() + "," + GetColor().getGreen() + "," + GetColor().getBlue() + ")\">" + GetExpediteur() + " > " + GetDestinataire() + " : " + GetMessage() + "</<span></br>";
+    }
 }

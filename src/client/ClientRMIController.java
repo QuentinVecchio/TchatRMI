@@ -16,6 +16,10 @@ public class ClientRMIController implements ClientTchat {
 	private ClientView view;
 	private CommunicationProtocol communication;
 	
+	/**
+	 * Constructeur de la classe ClientRMIController
+	 * 
+     */
 	public ClientRMIController() {
 		c = new Client();
 		connectionView = new ClientConnectionRMIView(this);
@@ -27,10 +31,18 @@ public class ClientRMIController implements ClientTchat {
 		}
 	}
 	
+	/**
+	 * Méthode qui lance le serveur
+	 * 
+     */
 	public void Start() {
 		connectionView.Affiche();
 	}
 	
+	/**
+	 * Méthode qui se connecte au près du serveur
+	 * 
+     */
 	public void Connection() {
 		try {
 			view = new ClientView(this);
@@ -51,6 +63,10 @@ public class ClientRMIController implements ClientTchat {
 		}
 	}
 
+	/**
+	 * Méthode qui se déconnecte au près du serveur
+	 * 
+     */
 	public void Disconnection() {
 		view.Exit();
 		try {
@@ -62,19 +78,35 @@ public class ClientRMIController implements ClientTchat {
 		}
 	}
 	
+	/**
+	 * Méthode qui gère la reception d'un message
+	 * 
+     */
 	public void Receive(MessageProtocol message) {	
 		c.AddMessage(message);
 		view.AddMessage(message);
 	}
 	
+	/**
+	 * Méthode qui gère l'ajout d'un client
+	 * 
+     */
 	public void AddClient(String client) {
 		view.AddClient(client);
 	}
 	
+	/**
+	 * Méthode qui gère la suppression d'un client
+	 * 
+     */
 	public void DeleteClient(String client) {
 		view.DeleteClient(client);
 	}
 	
+	/**
+	 * Méthode qui envoie un message
+	 * 
+     */
 	public void Send(Message message) {
 		try {
 			communication.Send(message);

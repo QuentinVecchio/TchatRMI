@@ -21,14 +21,24 @@ public class ServerRMIController {
     private Registry registry;
     private ServerView sv;
     
+    /**
+     * Constructeur de la classe ServerRMIController 
+     */
     public ServerRMIController() {
 
     }
     
+    /**
+     * Méthode qui lance le serveur 
+     */
     public void Start(){
         InitServeur(1099);
         run();
     }
+    
+    /**
+     * Méthode qui lance l'interface graphique du serveur
+     */
     public void run (){
         sv = new ServerView(this);
     }
@@ -86,9 +96,8 @@ public class ServerRMIController {
             obj.Send(mess);
             sv.eraseAllMessages();
             for (Message m: history.getMessages()){
-            	messages.add(m);	
-            	sv.AddMessage(m);
-            	obj.Send(m);
+            	messages.add(m);
+            	obj.SendSpecial(m);
             }
             obj.setPsudoForbiden(history.getPseudoForbidden());
         } catch (final java.io.IOException e) {
@@ -105,10 +114,13 @@ public class ServerRMIController {
         	}
         }
     }
-       
+      
+    /**
+     *	Méthode qui supprime tous les messages et tous les pseudoInterdit
+     */
     public void eraseHistorique(){
     	obj.eraseMessages();
-        obj.erasePsudoForbiden();   
+        obj.erasePseudoForbiden();   
     }
 
     /**
