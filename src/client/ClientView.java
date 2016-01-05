@@ -15,6 +15,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -35,14 +36,15 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 	private JLabel hostLabel2 = new JLabel("");
 	private JLabel portLabel2 = new JLabel("");
 	private JButton deconnectionButton = new JButton();
-	private JList clientsList;
+	private JList<String> clientsList;
 	private JEditorPane messagesArea = new JEditorPane();
 	private JButton sendButton = new JButton("");
 	private JTextField messageTextField = new JTextField("");
-	private DefaultListModel listClients;
+	private DefaultListModel<String> listClients;
 	private ClientRMIController c;
 	private String allMessage = "";
 	private JScrollPane scroll;
+	private boolean deconnectionWithOutNotification = false;
 	
 	public ClientView(ClientRMIController c) {
 		this.c = c;
@@ -70,7 +72,10 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == deconnectionButton) {
-			c.Disconnection();		
+			if(deconnectionWithOutNotification)
+				System.exit(0);
+			else
+				c.Disconnection();		
 		} else if (e.getSource() == sendButton) {
 			String s = "all";
 			if(clientsList.isSelectionEmpty() == false) {
@@ -92,6 +97,12 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 		listClients.removeElement(name);
 	}
 	
+	public void DeconnectError() {
+		sendButton.setEnabled(false);
+		deconnectionWithOutNotification = true;
+		JOptionPane.showMessageDialog(null, "Error Server", "Error : le serveur est éteint.", JOptionPane.ERROR_MESSAGE);
+	}
+	
 	public void AddMessage(MessageProtocol m) {
 		try {
 			allMessage += "<span style=\"color : rgb(" + m.GetColor().getRed() + "," + m.GetColor().getGreen() + "," + m.GetColor().getBlue() + ")\">" + m.GetExpediteur() + " > " + m.GetDestinataire() + " : " + m.GetMessage() + "</span><br>";
@@ -104,8 +115,8 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 	
 	private void BuildGUILeft() {
 		JPanel panelLeft = new JPanel();
-		listClients = new DefaultListModel();
-		clientsList = new JList(listClients);
+		listClients = new DefaultListModel<String>();
+		clientsList = new JList<String>(listClients);
 		clientsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		clientsList.setLayoutOrientation(JList.VERTICAL);
 		clientsList.setVisibleRowCount(-1);
@@ -187,11 +198,17 @@ public class ClientView extends JFrame implements ActionListener,WindowListener 
 	}
 
 	public void windowClosing(WindowEvent e) {
-		c.Disconnection();
+		if(deconnectionWithOutNotification)
+			System.exit(0);
+		else
+			c.Disconnection();		
 	}
 
 	public void windowClosed(WindowEvent e) {
-		c.Disconnection();		
+		if(deconnectionWithOutNotification)
+			System.exit(0);
+		else
+			c.Disconnection();				
 	}
 
 	public void windowOpened(WindowEvent e) {
